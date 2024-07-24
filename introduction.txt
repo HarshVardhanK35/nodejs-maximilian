@@ -1,0 +1,145 @@
+what is JS?
+-----------
+- JS a programming language used to manipulate DOM on browser side
+
+what is nodejs?
+---------------
+- nodejs is a different version of JS
+- so we use nodejs to run JS outside the browser
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+how this works?
+---------------
+- nodejs uses JavaScript-V8 engine (built by Google)
+- so this engine takes JS code and compiles it to machine code
+  - V8 is written in C++ code (+) Node.JS features --- helps to compile JS code
+
+- Node.js is a JavaScript runtime environment that allows you to run JavaScript code outside of a web browser
+- It is built on the V8 JavaScript engine, which is the same engine that powers Google Chrome
+- Node.js enables developers to use JavaScript for server-side scripting...
+  meaning they can write server-side code to create dynamic web page content before the page is sent to the user's web browser
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Installation Node.JS and Creating First Application
+---------------------------------------------------
+- visit nodejs.org - download the 'current' version
+- check the node:
+  "node -v" inside terminal / cmd prompt
+
+- use node:
+  - node provides an interactive mode that is REPL ()
+  - to enter this mode... just simply run "node" inside terminal
+  - to exit this mode... press (control + c)
+
+REPL
+--- Read Eval Print Loop
+
+- a playground to execute example snippets opf the JS code
+- we can not save the code when we use REPL
+- we can not write code for real applications
+
+R - read user input
+E - evaluate user input
+P - print the output (result)
+L - loop (wait for new user input)
+
+
+- install VS code:
+  - as we can not run or edit the code inside the terminal... we install VS code
+
+- create a file with ".js" extension and to execute it use the command: "node filename.js" inside a 'terminal'
+
+Example
+-------
+- to import a functionality we use "require('< module-name >')" which returns an output which will be stored inside a variable
+
+snippet:
+---
+const fs = require('fs)
+fs.writeFileSync('hello.txt', 'hello!')
+
+explanation:
+---
+require(): the above code imports a module
+writeFileSync(): creates a file with 1st argv and insert the 2nd argv into the file
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+course outline
+--------------
+
+ getting started
+      |
+JS refresher (OPTIONAL)
+      |
+ nodejs basics
+      |
+efficient development
+      |
+  express.js
+      |
+template engines
+      |
+model-view-controller
+    pattern
+      |
+ advanced routes
+   and models
+      |
+  node + SQL
+   (MySQL)
+      |
+  using sequelize
+      |
+  node + NoSQL
+  (mongoDB)
+      |
+  using mongoose
+      |
+sessions and cookies
+      |
+  authentication
+      |
+sending e-mails
+      |
+advanced authentication
+  (deep dive)
+      &
+  authorization
+      |
+  user input
+  validation
+      |
+ error handling
+      |
+ file uploads
+      &
+  downloads
+      |
+pagination (chunks)
+      |
+  async requests
+      |
+   handling
+   payments
+      |
+  REST API basics
+      |
+Advances REST API
+    features
+      |
+using async-await
+      |
+  websockets
+      &
+  socket.io
+      |
+    graphQL
+      |
+  deployment
+      |
+beyond web servers
+  (bonus)
+      |
+node+Typescript
+   & deno
+  (bonus)
