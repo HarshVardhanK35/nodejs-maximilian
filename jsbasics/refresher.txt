@@ -1,0 +1,202 @@
+- JAVASCRIPT... weekly typed, object-oriented, versatile language.
+                /                   |                         \
+      No explicit type        data can be                 runs in browser & directly
+      assignment            organized in logical              on a PC / Server
+                                  objects
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+basics
+------
+var name = "harsha"
+var age = 23
+                            PARAMETERS >>> named variables that are passed into a function definition
+                            /       \
+function summarizeUser (userName, userAge) {
+  return (`username: ${userName} with age: ${userAge}`)
+}
+
+console.log(summarizeUser(name, age))
+                          \       /
+                          ARGUMENTS >>> actual values to the parameters passed while invoking the function
+
+- we can declare the variables using LET, CONST (VAR is outdated)
+- the values assigned to variables declared using 'LET' can be mutable
+- the values assigned to variables declared using 'CONST' can not be mutable hence they are called "CONSTANTS"
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+function declaration vs arrow functions
+---
+
+function declaration
+--------------------
+function summarizer (userName, userAge) {
+  return ('something')
+}
+
+arrow functions
+---------------
+const summarizeUser = (userName, userAge) => {
+  return (`username: ${userName} with age: ${userAge}`)
+}
+summarizeUser(name, age)
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+objects, properties and methods
+-------------------------------
+const person = {
+  name: "harsha",
+  age: 23,
+  greet: function() {
+    console.log(`hi! my name is: ${this.name}`)
+  }
+  sayMyName() {
+    console.log(`My name is: ${this.name}`)
+  }
+}
+person.greet()
+person.sayMyName()
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+arrays & array methods
+----------------------
+// array
+const hobbies = ['writing', 'reading']
+
+// we can user Array constructor to define a new array
+---
+const arr = new Array('hell', 'despair', 'hate')
+console.log(arr)
+
+// array methods >>> map
+---
+const hobbiesMap = hobbies.map((hobby) => {
+  return (`hobby at index ${hobbies.indexOf(hobby)} is: ${hobby}`)
+})
+console.log(hobbiesMap)
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+- arrays and objects are reference types
+- we can still edit the array even the array is declared with 'const' keyword
+
+ex:
+const hobbies = ['writing', 'reading']
+hobbies.push('watching')
+
+- reason is reference types only store the address pointing the memory where the array has stored...
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+rest and spread operators
+-------------------------
+
+spread operator
+---
+const hobbies = ['writing', 'reading']
+
+- when we want to add a new hobby but not to edit the original array...
+
+ex:
+const hobbies1 = ['writing', 'reading']
+const hobbies2 = [...hobbies1, 'program'];
+console.log(hobbies2);                              // without modifying the existing array
+console.log(hobbies1)                               // copy the existing arr and add a value to the copy
+
+rest operator
+---
+const toArray = (arg1, arg2) => {
+  return [arg1, arg2]
+}
+clg(toArray(1, 2))
+
+- without specifying every argument into the parameters... we can use rest parameter
+
+const toArray = (...args) => {
+  return args
+}
+clg(toArray(1, 2, 3, 4))
+
+Note:
+-----
+- if we use three dot (...) to pull elements out of arrays / objects... then it would be the 'spread' operator
+- if we use same (...) to merge arguments into an array and used it inside a function... then it would be 'rest' operator
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Destructuring
+-------------
+
+// object destructuring
+---
+const { name, age } = person
+const greet = (userName, userAge) => {
+  return `hello, user: ${userName} with age: ${userAge}`
+}
+console.log(greet(name, age))
+
+// array destructuring
+---
+const [ hob1,hob2 ] = hobbies
+console.log(hob1, hob2)
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Asynchronous Code & Promises
+----------------------------
+1.
+// this below code executes asynchronously
+
+setTimeout(() => {
+  console.log("Done!")
+}, 2000)
+
+// below two lines synchronously
+console.log("1")
+console.log("2")
+
+Note:
+---
+- JS executes the code synchronously
+- even it is 1 millisecond the setTimeout (setTimeout > an asynchronous function) runs asynchronously
+- asynchronous code does not block the synchronous code execution
+
+2.
+//nested asynchronous calls
+
+const fetchData = (cb) => {
+  setTimeout(() => {
+    cb('Done!')
+  }, 1500)
+}
+
+setTimeout(() => {
+  fetchData((message) => {
+    console.log(message)
+  })
+}, 2000)
+
+console.log("1")
+
+Note:
+---
+- we use promises to handle nested asynchronous functions
+
+3.
+// Promises
+
+const fetchData1 = () => {
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Resolved successfully!')
+    }, 1500)
+  })
+  return promise
+}
+setTimeout(() => {
+  console.log('promise resolving started...')
+  fetchData1()
+  .then((res) => {
+    console.log(res)
+    return fetchData()
+  })
+  .then ((res) => {
+    console.log(res)
+  })
+}, 2000)
+console.log("Outside asynchronous!")
