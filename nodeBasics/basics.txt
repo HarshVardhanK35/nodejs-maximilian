@@ -1,0 +1,369 @@
+How browser works?
+------------------
+- client sends a 'request' to server
+- server sends a 'response' in return to client
+
+- this whole process is done through a protocol >>> http / https
+
+HTTP: Hyper Text Transfer Protocol
+---
+- a protocol for transferring data which understood by browser and server
+
+HTTPS: Hyper Text Transfer Protocol Secure
+---
+- HTTP + Data Encryption
+- same as HTTP but with SSL encryption turned on
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Creating a Node Server
+----------------------
+- create a new file >>> "serve.js" / "app.js"
+
+
+core node modules
+---
+http, https, fs, path, os >>> these are the main core node modules used widely
+
+http - launch a server, send requests
+https - launch an SSL server (SSL included server)
+fs - file system
+path -
+os - operating system module
+
+
+http module:
+---
+1.
+---
+used to create a server... as the features and functions are not available globally so we have to import the module into working file (server.js)
+  - to import we use "require()"
+    - require('./filename.js') >>> we can import own JS files using path './' (local files)
+    - require('http') >>> we can import node modules
+
+Note:
+- to access the properties or methods inside modules we use dot (.) notation
+
+2. http.createServer
+---
+  - createServer is a method we access from http module >>> which creates a server
+  - this takes in 'request', 'response' : functions as "PARAMETERS"
+  - request is an object that is sent by the client >>> server process the request >>> sends the response to the client
+
+3. event driven architecture:
+---
+const server = http.createServer((req, res) => {})
+
+- "(req, res) => {}" >>> callback function
+  - this will be executed every time whenever a request is sent by the client
+  - send the res for the req...
+
+  res.end("Hello World!")
+
+4. server.listen()
+---
+- create a server and listen it on any port: default {8080} or {3000}
+
+
+snippet:
+                    const http = require('http');
+                    const server = http.createServer((req, res) => {
+                      console.log(req)
+                      res.end('Hello node!')
+                    })
+                    server.listen(3000, () => {
+                      console.log('server up and listening on: http://localhost:3000')
+                    })
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Node Lifecycle and Event Loop
+-----------------------------
+- we executed the previous file with: "node 'filename'.js"
+- this starts the script
+- parse the code and register the variables and functions
+
+Note:
+---
+- Node uses an event-loop feature which never 'exit' from the execution... node keeps on running the as long as there are event listeners
+  - we registered the requestListener
+                  (req, res) => {
+                    console.log(req)
+                  }
+- as we do not want to exit because we have to listen continuously for the incoming requests
+- node.js uses this event driven approach for every thing... as JS is single threaded language (entire node processes one thread at a time)
+- as we get multiple requests... we must not exit from the event loop
+
+Note:
+---
+- if we want to quit the server we can use "process.exit()"... but we do not use it because we do not exit from incoming requests.
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Request Objects
+---------------
+- we can access URL, methods we used and headers we set using request object
+
+const server = http.createServer((req, res) => {
+  console.log(req.url)
+})
+
+ex: req.url, req.method and req.headers
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Sending Responses
+-----------------
+- we can set headers, write / send an HTML as a response to the server
+
+- by setting the headers we say that the Content-Type will be: 'text/html'... use "rea.setHeader('Content-Type': 'text/html')"
+- we send the HTML using "res.write()"
+  - in line by line... in chunks
+- we need to tell Node that we are done in creating the response ... we do it by "res.end()"
+  - after ending the response we can not write response any more.
+
+snippet:
+---
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.setHeader('Content-Type', 'text/html')
+  res.write('<html>')
+  res.write('<head><title>Response</title></head>')
+  res.write('<body><h1>Hello from the Node</h1></body>')
+  res.write('</html>')
+  res.end()
+})
+server.listen(3000, () => {
+  console.log('server up and listening on: http://localhost:3000')
+})
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Routing Requests
+----------------
+- connect both request and response Objects
+- for '/' route we send a response with HTML as Content-Type
+
+- to send response... we use res.write()
+  - res.write('<body><form action="/message" method="POST"><label for="message">Enter a message</label><input type="text" name="message"><button type="submit">submit</button></form></body>')
+
+    - we set the action to URL: '/message' for form and method will be 'POST'
+    - we send message typed inside input box to '/message' - route
+    - after sending the response we return / exit from the response execution
+
+snippet:
+=--
+const http = require('http');
+const server = http.createServer((req, res) => {
+  const url = req.url
+  if (url === '/') {
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<html>')
+    res.write('<head><title>Response</title></head>')
+    res.write('<body><form action="/message" method="POST"><label for="message">Enter a message</label><input type="text" name="message"><button type="submit">submit</button></form></body>')
+    res.write('</html>')
+    return res.end()
+  }
+})
+server.listen(3000, () => {
+  console.log('server up and listening on: http://localhost:3000')
+})
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Redirecting Requests
+--------------------
+
+- in previous section... we have not set the '/message' URL ... so we get an error when we request the page with '/message'.
+- in this section we set the route (/message)... we create a file and store a "DUMMY" data inside that file using 'FS' module.
+
+snippet:
+=--
+const http = require('http')
+const fs = require('fs')
+
+const server = http.createServer((req, res) => {
+  const url = req.url
+  const method = req.method
+  if (url === '/') {
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<html>')
+    res.write('<head><title>Response</title></head>')
+    res.write('<body><form action="/message" method="POST"><label for="message">Enter a message: <input type="text" name="message"><button type="submit">submit</button></label></form></body>')
+    res.write('</html>')
+    return res.end()
+  }
+  if (url === '/message' && method === 'POST') {
+    fs.writeFileSync('message.txt', 'DUMMY')
+    res.statusCode = 302
+    res.setHeader('Location', '/')
+    return res.end()
+  }
+})
+server.listen(3000, () => {
+  console.log('server up and listening on: http://localhost:3000')
+})
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Parsing Request Bodies
+----------------------
+- parsing the data that is coming from request object
+
+- in this section... we parse the data from request object that is being sent from form of '/' to '/message' url
+- the incoming data from request is sent in a stream... it is read in chunks (multiple parts) by node
+  - if the file is larger
+- we work with buffer... which holds multiple chunks and work on those before they get released
+
+snippet:
+=--
+if (url === '/message' && method === 'POST') {
+  const reqBody = []
+  req.on('data', (chunk) => {
+    console.log(chunk)
+    reqBody.push(chunk)
+  })
+  req.on('end', () => {
+    const parsedBody = Buffer.concat(reqBody).toString()
+    const message = parsedBody.split('=')[1]
+    fs.writeFileSync('message.txt', message)
+  })
+  res.statusCode = 302
+  res.setHeader('Location', '/')
+  return res.end()
+}
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Blocking and Non-Blocking Code
+------------------------------
+- fs.writeFileSync()... synchronous way of creating the file
+  - stops the execution of code below this line until this creates the file
+  - if a large megabytes of file to be created then it takes more time to create... as it is synchronous it stops the execution of code below it
+  - every thing will be paused (incoming new requests etc.,) until this operation finishes
+
+- therefore, we should not use this writeFileSync()... instead we can use writeFile() >>> asynchronous way to create a file
+  - this accepts (path, data, callback) >>> fs.writeFile(path, data, callback)
+
+- callback... the callback will be executed after some time
+  - takes (err) and we can handle the error... if any error occurred.
+
+snippet
+=--
+if (url === '/message' && method === 'POST') {
+  const reqBody = []
+  req.on('data', (chunk) => {
+    console.log(chunk)
+    reqBody.push(chunk)
+  })
+  req.on('end', () => {
+    const parsedBody = Buffer.concat(reqBody).toString()
+    const message = parsedBody.split('=')[1]
+    fs.writeFile('message.txt', message, (err) => {
+      res.statusCode = 302
+      res.setHeader('Location', '/')
+      return res.end()
+    })
+  })
+}
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Using Node Modules System
+-------------------------
+- in this we learn about exporting modules... creating our own modules (short code blocks)
+  - through this we get a nicer look for our code.
+
+- create a "routes.js" file...
+  - to store all the routes that were created inside server.js file (for readability)
+
+snippet
+=--
+routes.js file:
+---
+
+const fs = require('fs')
+const reqHandler = () => {
+  const url = req.url
+  const method = req.method
+  if (url === '/') {
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<html>')
+    res.write('<head><title>Response</title></head>')
+    res.write('<body><form action="/message" method="POST"><label for="message">Enter a message: <input type="text" name="message"><button type="submit">submit</button></label></form></body>')
+    res.write('</html>')
+    return res.end()
+  }
+  if (url === '/message' && method === 'POST') {
+    const reqBody = []
+    req.on('data', (chunk) => {
+      // console.log(chunk)
+      reqBody.push(chunk)
+    })
+    req.on('end', () => {
+      const parsedBody = Buffer.concat(reqBody).toString()
+      const message = parsedBody.split('=')[1]
+      fs.writeFile('message.txt', message, (err) => {
+        res.statusCode = 302
+        res.setHeader('Location', '/')
+        return res.end()
+      })
+    })
+
+    // Add return statement to ensure function does not continue
+    return;
+  }
+  res.setHeader('Content-Type', 'text/html')
+  res.write('<html>')
+  res.write('<head><title>Response</title></head>')
+  res.write('<body><h1>Error: 404 not found</h1></body>')
+  res.write('</html>')
+  return res.end()
+}
+module.exports = reqHandler;
+
+
+server.js file
+=--
+const http = require('http')
+const routes = require('./routes')
+const server = http.createServer(routes)
+server.listen(3000, () => {
+  console.log('server up and listening on: http://localhost:3000')
+})
+
+Note
+---
+- now to import the exported file into 'server.js'...
+  - we use 'const routes = require('./routes')'
+
+conclusion
+----------
+- we can export file using also ...
+  - module.exports = { function1, function2 }
+
+- we can import using...
+  - const routes = require('path to exported file')
+  - routes.function1
+  - routes.function2
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+SUMMARY
+-------
+1. HOW THE WEB WORKS?
+- flow
+- client => request => server => response => client
+
+2. PROGRAM LIFECYCLE AND EVENT LOOP
+- node.js runs non-blocking JS code and uses an event-driven code ("event loop") or running a logic
+- node program exits as soon as there is no more work to do
+Note:
+- the createServer() never finishes by default
+
+3. ASYNCHRONOUS Code
+- JS code is non-blocking
+- use callbacks and events => order changes!
+
+4. REQUESTS AND RESPONSES
+- parse request data in chunks (streams and buffer)
+- avoid "double responses"
+
+5. NODE.JS CORE MODULES
+- node.js ships with multiple core modules (http, fs, path etc...)
+- core modules can be imported any file
+- import via require('module-name')
+
+6. THE NODE MODULE SYSTEM
+- import via ('./path-to-file') for custom files or require('module') for core & third-party modules or user defined modules
+- export via module.exports = { multiple-functions }
