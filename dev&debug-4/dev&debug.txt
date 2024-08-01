@@ -1,0 +1,176 @@
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Understanding NPM Scripts
+-------------------------
+- up to now we have been starting the scripts manually: "node <filename.js>"
+- npm installed with nodejs (automatically)... with npm we can install 3rd-party packages (that are not the part of node core)
+  - we use npm to initialize node project (or) we can add new features to the existing project
+
+- use the command: <npm init> or <npm init -y>
+- run the command in the terminal... which adds a 'package.json' (a configuration file) to the project folder
+- in .json file both keys and values are enclosed inside double quotations
+
+- in package.json... add a 'start' script inside scripts section (an object).
+  - "start": "node server.js"
+
+package.json:
+---
+{
+  "name": "nodebasics-3",
+  "version": "1.0.0",
+  "main": "routes.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+
+- we can start the script with the command: <npm start>
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Installing 3rd Party Packages
+-----------------------------
+- with NPM we can install 3rd party packages
+  - these packages are available on npm repository (a cloud package repository)
+  - we can install using NPM
+
+- until now when ever there are changes... we manually run the command "npm start" to start the scripts
+- but we need a package that automatically runs the script with any changes that were made
+
+- so to add any 3rd party package... we use "npm install <package-name>"
+
+- The packages that are installed can be of types:
+1. development packages - the packages that are helpful while development
+2. production packages  - these help for the app running on the server
+
+- to install a production package we use... "npm install <package-name> --save"
+
+Note
+----
+global installation
+---
+- to install a package globally... we use "npm install <package-name> -g"
+
+Nodemon
+-------
+- to restart the app manually... we install "nodemon" and nodemon is a development package
+  - to install a dev dependency / development package... we use "npm install <package-name> --save -dev"
+
+- after install any package... there will be node-modules folder, package-lock.json added into the project folder
+- the package.json will also be changed >>> a new devDependencies: {} will be added
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Extras
+------
+Global Features vs Core Modules vs Third-Party Modules
+---
+- The last lectures contained important concepts about available Node.js features and how to unlock them.
+
+- You can basically differentiate between:
+  - Global features: Keywords like const or function but also some global objects like process
+  - Core Node.js Modules: Examples would be the file-system module ("fs"), the path module ("path") or the Http module ("http")
+  - Third-party Modules: Installed via npm install - you can add any kind of feature to your app via this way
+
+- Global features:
+  - are always available, you don't need to import them into the files where you want to use them.
+
+
+- Core Node.js Modules:
+  - don't need to be installed (NO npm install is required) but you need to import them when you want to use features exposed by them.
+Example:
+---
+-> const fs = require('fs');
+- You can now use the fs object exported by the "fs" module.
+
+
+- Third-party Modules:
+  - need to be installed (via npm install in the project folder) AND imported.
+Example:
+---
+-> npm install --save express-session              // In terminal/ command prompt
+-> const sessions = require('express-session')     // In code file (e.g. app.js)
+
+
+Using Nodemon for Auto-Restarts
+-------------------------------
+- modify the start scripts inside package.json...
+  - "start": "nodemon server.js"
+
+- just run the command "npm start" inside the terminal
+  - after every change... the execution will restart automatically.
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Understanding Different Error Types
+-----------------------------------
+
+- types of errors
+---
+1. syntax errors
+2. runtime errors
+3. logical errors
+
+- track the logical errors using the debugger available on VS code.
+
+problem:
+---
+- as nodemon, the debugging has to start automatically with the changes we made in the application code
+- to start the debugger restart automatically on change / modification inside the code...
+
+solution:
+---
+- click on "add configuration" >>> select "node.js" as 'debugger'-> adds ".vscode" with 'launch.json' folder inside parent / project folder
+- inside that launch.json -> we can add more settings for configuration...
+
+-> "restart": true,                    // which restarts the 'debugger' automatically with any changes in the code
+-> "runtimeExecutable": "nodemon",     // which restart not only the 'debugger' as well as with scripts with 'nodemon'
+-> "console": "integratedTerminal"
+
+- we can also define the file from where the debugging has to start (like app.js / server.js)
+  - we can start the debugging what ever the file we are in
+
+- with "runtimeExecutable": "nodemon"... debugger searches for the nodemon globally
+  - so we have to install the nodemon globally
+
+installation-nodemon (globally):
+---
+-> "npm install nodemon -g"        >>> on windows
+-> "sudo npm install nodemon -g"   >>> on mac / linux
+
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Summary
+-------
+
+1. NPM
+------
+- NPM >>> Node Package Manager
+- it allows us to manage the project and dependencies inside the project
+- we can initialize the project with "npm init -y"
+- npm start scripts can be defined inside "package.json"
+
+2. 3rd Party Packages
+---------------------
+- node projects do not just use core modules but also 3rd party packages
+- install them via NPM
+- install
+  - dev dependencies (--save -dev)
+  - production dependencies (--save)
+  - global dependencies (-g)
+
+3. Type of errors
+-----------------
+- syntax, runtime and logical errors can break the application
+- syntax & runtime errors throw (helpful and detailed) error messages (with exact line number)
+- logical errors can be fixed with testing and solved with debugging
+
+4. Debugging
+------------
+- use the VS code node debugger to step into your code and go through it step by step
+- analyze variable values at runtime
+- look into (and manipulate) variables at runtime
+- use break points to debug the code

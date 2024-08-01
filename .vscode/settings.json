@@ -3,6 +3,8 @@
     "concat",
     "deno",
     "harsha",
+    "nodebasics",
+    "nodemon",
     "sequelize",
     "Vardhan",
     "websockets"
