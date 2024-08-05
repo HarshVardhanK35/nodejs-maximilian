@@ -3,7 +3,7 @@ what is express?
 - writing a server side code in node.js is a complex way
   - ex: we wrote so much to parse an incoming request in node
 
-- however express also does not have in-built way to parse the data... but we install another package to parse
+- however express also does not have in-built way to parse the data ... but we install another package to parse
 - we also use framework
   - framework is a set of helper functions, tools and rules that help you build an application
 ____________________________________________________________________________________________________________________________________________________________________________________________________
@@ -44,7 +44,7 @@ next()
 - we are passing a function to the 'use' method in app and the passed function taking another function that is "next()"
 - next()
 - allows the request to travel along the other middlewares
-  - if called on 1st middleware... it travels to next or 2nd middleware
+  - if called on 1st middleware ... it travels to next or 2nd middleware
     - else it does not
   -
 -
@@ -76,8 +76,8 @@ How middleware works?
 - the main advantage of express is it will automatically set the header on it's own.
   - however we can define it on our own. using the node syntax like (res.setHeader())
 
-- so to send the response from the express application... we can use middleware
-  - if we passed a res.send() in 1st middleware... the request will not go through the next / 2nd middleware... until unless next() is called inside 1st middleware.
+- so to send the response from the express application ... we can use middleware
+  - if we passed a res.send() in 1st middleware ... the request will not go through the next / 2nd middleware ... until unless next() is called inside 1st middleware.
 
 - so we use "res.send()" to send the responses from any middleware
 - headers are set on default with express but we can overwrite them using 'res.setHeader()'
@@ -147,8 +147,8 @@ app.listen(3000)
 
 Note
 ---
-- the above code will send the response to any path... it just checks for the path to start with just '/'
-- so whether it is just http://localhost:3000/ (or) http://localhost:3000/hello (or) another route... it will send the response that we send
+- the above code will send the response to any path ... it just checks for the path to start with just '/'
+- so whether it is just http://localhost:3000/ (or) http://localhost:3000/hello (or) another route ... it will send the response that we send
 
 
 another snippet:
@@ -173,7 +173,7 @@ app.listen(3000)
 
 explanation
 ---
-- from the above code... as next() is not called inside 1st middleware the next middleware shall not be executed, however it does (explanation is provided below...)
+- from the above code ... as next() is not called inside 1st middleware the next middleware shall not be executed, however it does (explanation is provided below...)
 
 1. Request to /product:
 ---
@@ -185,4 +185,163 @@ explanation
 ---
 - First middleware does not match, so it is skipped.
 - Logs Inside 2nd middleware and Sends response <h2>This is another route</h2>.
+____________________________________________________________________________________________________________________________________________________________________________________________________
 
+Parsing Incoming Requests
+-------------------------
+- when we try to console-log the "req.body" from the response ... we get 'undefined' as a result
+- we have un-parsed req.body an dwe have to parse it!
+
+install body-parser:
+---
+- this is to parse the request-body
+- install using "npm install --save body-parser"
+- import it into the working file ... using const bodyParser = require('body-parser')
+
+- use app.use() and include the body-parser into it.
+  - app.use(bodyParser.urlencoded({ extended: false }))
+
+- this above code-snippet registers a middleware and this will do whole request body parsing that we did manually with node.js
+  - this does not parse all types of request bodies but only the text that we are sending as response.
+  - (exception for json and files data so on...) for these we install other parsers for specific data we are receiving.
+
+whole code snippet:
+---
+const express = require('express')
+const bodyParser = require('body-parser')
+
+const app = express()
+
+// body-parser middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use('/add-product', (req, res, next) => {
+  res.send("<form action='/product' method='POST'><label for='product'>Enter a product: <input type='text' placeholder='Enter product name' name='product'/><button type='submit'>Add Product</button></label></form>")
+})
+
+app.use('/product', (req, res, next) => {
+  console.log(req.body.product)
+  res.redirect('/')
+})
+
+app.use('/', (req, res, next) => {
+  res.send("<div><h3>Hello! Welcome</h3></div> <div><a href='/add-product'>Click Here!</a></div>")
+})
+
+app.listen(3000, () => {
+  console.log(`Server is up and running on: http://localhost:3000`)
+})
+
+Note:
+---
+- we can also use 'app.get()' instead of 'app.use()' for "GET" requests and 'app.post()' for "POST" requests.
+- app.use() >>> works with all the requests but for specific requests we use app.get app.post and so on
+---
+app.use('/product', (req, res, next) => {
+  console.log(req.body.product)
+  res.redirect('/')
+})
+---
+- instead of app.use() ... we can use app.post() as it is a POST request
+
+app.post('/product', (req, res, next) => {
+  console.log(req.body.product)
+  res.redirect('/')
+})
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Using Express Router
+--------------------
+- until now we are putting all the routes and middlewares into a single main "app.js" file
+  - which makes it bigger
+
+- we export all the routing logic into files that keep the routes and import them into the main app.js
+
+code splitting
+---
+- create "routes" folder to keep different route files
+- and under it create a "shop.js" >>> for user ... "admin.js" >>> to manage products data
+
+inside admin.js
+---
+- import express.Router() and store it into a variable
+  - const router = express.Router()
+- we can use router.post and router.get for specific HTTP requests
+- export it using module.exports = router >>> export the whole router
+
+inside app.js
+---
+- import the exported router from the admin.js
+  - const adminRoutes = import require('/path-to-admin-file')
+
+- include the adminRoutes inside a middleware
+  - app.use(adminRoutes)
+
+Note
+---
+- just pass the whole adminRoutes as an object and do not call it as (adminRoutes())
+- order matters if we use app.use() and does not matter if we use exact match of that HTTP request
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Adding a 404 Error Page
+-----------------------
+- we must have to add an error page at the last of all active routes...
+  - before the app.listen()
+
+app.use((req, res, next) => {
+  res.status(404).send('<h1>404</h1><h3>Page not found!</h3>')
+})
+
+- we cna also add a status() ... specific status inside every response
+- this snippet works for all routes ... expect the routes upon it (skips the routes upon it!)
+
+
+Filtering Paths
+---------------
+- we can filter the paths...
+  - admin paths with /admin/<all.paths>
+  - shop route paths with /shop/<all.paths>
+
+- simply, added '/admin' as filter inside app.use('/admin', adminRoutes)
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Creating HTML Pages
+-------------------
+- learn how to return / serve real HTML files to user
+- as per MVC (Model.View.Controller) create a file named "views"
+
+- we manage the pages / HTML pages that user has to view
+- "/views" has only HTML pages (frontend)
+
+- create "/views" folder inside main folder
+- under it create "shop.html" and "add-product.html" which has files that will be served for frontend
+  - inside these html files write the content
+
+
+Serving HTML Pages
+------------------
+1. How to server the HTML pages inside the routes "admin.js" and "shop.js"?
+
+res.sendFile()
+---
+- inside shop.js...
+  - we can simply do that using "res.sendFile()" which takes in a path... but returns an error
+
+Path
+---
+- so we have to use path core-module ... const path = require('path')
+  - path has join method < path.join() >
+    - join()... takes in "__dirname" and "__filename" (which are global variables)
+
+- path.join('') concatenates different segments of path
+  - 1st segment is ... __dirname (holds an absolute path on our OS to the working folder)
+  - 2nd ... "../" goes outside of working folder
+  - 3rd ... "views"
+  - 4th ... "file-name"
+
+code: res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'))
+
+Note
+---
+- for shop.js (route) and this path is for only to this specific project (path varies for other)
+- segments must be comma separated ... BTS pats joins with "/" (linux) or "\" (windows) as per the OS
