@@ -359,4 +359,14 @@ ________________________________________________________________________________
 
 Styling Our Pages
 -----------------
-- 
+- COMPLETED
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Serving Files Statically
+------------------------
+- use
+  - app.use(express.static(path.join(__dirname, 'public')))
+
+- to serve the static files ... like CSS HTML etc.
+- create a folder: "public" ... add 'main.css' and 'product.css' files to include CSS we have written inside HTML files
+- import the CSS into HTML files ... using "link" tag
