@@ -335,13 +335,28 @@ Path
 
 - path.join('') concatenates different segments of path
   - 1st segment is ... __dirname (holds an absolute path on our OS to the working folder)
-  - 2nd ... "../" goes outside of working folder
+  - 2nd ... ".." goes outside of working folder
   - 3rd ... "views"
   - 4th ... "file-name"
 
-code: res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'))
+code: res.sendFile(path.join(__dirname, '..', 'views', 'shop.html'))
 
 Note
 ---
 - for shop.js (route) and this path is for only to this specific project (path varies for other)
 - segments must be comma separated ... BTS pats joins with "/" (linux) or "\" (windows) as per the OS
+
+
+Using Helper Function for Navigation
+------------------------------------
+- create utils folder and insert a path.js file inside it
+
+const path = require('path')
+module.exports = path.dirname(process.mainModule.filename)
+
+- import it into the working file ... use it while sending the file and adjust the segments according the path the files are in!
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Styling Our Pages
+-----------------
+- 
