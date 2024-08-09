@@ -370,3 +370,28 @@ Serving Files Statically
 - to serve the static files ... like CSS HTML etc.
 - create a folder: "public" ... add 'main.css' and 'product.css' files to include CSS we have written inside HTML files
 - import the CSS into HTML files ... using "link" tag
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Summary
+-------
+1. what is express?
+---
+- express is a node.js framework ... package that adds utility functions and tools and a clear set of rules on how the app should be built (the middleware)
+- we can plug other packages into it! (extensible)
+
+2. Middleware, next() and res()
+---
+- express relies on middleware functions
+- middleware functions handles "req()" and "next()" to be called inside a middleware to forward that req() to next middleware
+
+3. Routing
+---
+- we can filter requests by path and method
+- if we filter by methods, paths are matched exactly
+- we can use "express.Router()" to cut a code into pieces (split the routes)
+
+4. serve files
+---
+- we can send files to users (ex. HTML)
+- if a request is directly made for a file (ex. CSS) ... then we can enable static serving for such files using "express.static()"
+

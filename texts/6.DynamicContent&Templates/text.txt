@@ -1,0 +1,152 @@
+Sharing Data Across Requests & Users
+------------------------------------
+1. created a dummy storage inside admin.js using a variable "const products = []"
+
+2. after adding product via the form ... we push the object that was created into the above array
+  - products.push({ title: req.body.title })
+- redirection: after adding products user will be redirected to '/' that is 'shop.js'
+
+snippet:
+---
+const products = []
+router.post('/add-product', (req, res, next) => {
+  products.push({ title: req.body.title })
+  res.redirect('/')
+})
+
+3. logging the data to console ...
+  - the products array will be logged to the console
+    - after redirecting to '/' we console log the data inside the middleware
+
+snippet:
+---
+router.get('/', (req, res, next) => {
+  console.log('shop.js', adminData.products)
+  res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'))
+})
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Template Engines - an Overview
+------------------------------
+1. to put dynamic content into our HTML pages ... we use Template Engines
+
+How does these engines work?
+---
+- we have some easily written templates and has some spaces between them (spaces >>> placeholders)
+- into these placeholders JS code will be inserted
+
+ChatGPT:
+---
+- Template engines in JavaScript, like EJS, Pug, or Handlebars, work by allowing you to create HTML templates with embedded placeholders for dynamic content.
+- These placeholders are spaces where you can inject JavaScript code, variables, or data at runtime.
+- When the template is rendered, the engine processes these placeholders, replacing them with actual content, and generates a complete HTML page.
+- This approach makes it easier to maintain and update web pages by separating the structure (HTML) from the logic (JavaScript).
+
+EJS
+---
+<p><%= name%></p>
+- use normal HTML and plain JS in templates
+
+Pug
+---
+p #{name}
+- use minimal HTML and custom template languages
+
+Handlebars
+---
+<p>{{ name }}</p>
+- same like Pug
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Installing & Implementing Template Engines
+------------------------------------------
+- install 3 packages with (as production dependencies)
+  - npm install pug ejs express-handlebars --save
+
+How to use PUG?
+---
+1. after initializing app (const app = express())
+
+2. use "app.set()" to set any values globally on express application
+---
+  - app.use(key, value)
+- keys are keywords that are unique (views and view engine)
+
+3. so to use PUG ... we set (key, value) as
+---
+- to compile dynamic content with which engine ... 2nd argv to compile the template code inside views directory
+  - app.set('view engine', 'pug')
+
+- where to find these templates ... searches for the directory provided as the 2nd argv
+  - app.set('views', 'views')
+
+4. this compiles only the files with .pug as extension
+
+
+PUG
+---
+- this is works different compared to normal HTML templates
+- pug engine compiles to HTML bts
+
+link(rel="stylesheet", href="")
+  |             |
+ tag       attributes
+
+Note:
+- (use VS code for easier code generation... that uses "Emmet Abbreviation")
+- important: Indentions Matters
+
+
+PUG- template:
+---
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title My Shop
+    link(rel="stylesheet", href="/css/main.css")
+    link(rel="stylesheet", href="/css/product.css")
+  body
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a.active(href="/") Shop
+          li.main-header__item
+            a.active(href="/admin/add-product") Add-Product
+
+HTML- template
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+<¿body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list">
+                <li class="main-header__item"><a class="active" href="/">Shop</a></li>
+                <li class="main-header__item"><a href="/admin/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+</body>
+
+6. rendering templates
+---
+- we use "res.render()" provided by express
+- this use the default template engine and searches for the pug templates in provided folder (app.js)
+
+router.get('/', (req, res, next) => {
+  res.render('shop')
+})
+
+- searches for shop.<used template engine extension> inside views directory provided in app.js
+  - (app.set('views', 'views'))

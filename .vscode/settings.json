@@ -6,6 +6,7 @@
     "nodebasics",
     "nodemon",
     "sequelize",
+    "stylesheet",
     "Vardhan",
     "websockets"
   ]
