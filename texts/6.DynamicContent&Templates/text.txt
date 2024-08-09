@@ -150,3 +150,5 @@ router.get('/', (req, res, next) => {
 
 - searches for shop.<used template engine extension> inside views directory provided in app.js
   - (app.set('views', 'views'))
+
+  
