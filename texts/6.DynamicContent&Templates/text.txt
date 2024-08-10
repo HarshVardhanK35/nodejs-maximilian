@@ -150,5 +150,81 @@ router.get('/', (req, res, next) => {
 
 - searches for shop.<used template engine extension> inside views directory provided in app.js
   - (app.set('views', 'views'))
+____________________________________________________________________________________________________________________________________________________________________________________________________
 
-  
+Outputting Dynamic Content
+--------------------------
+- res.render('shop', 2nd argv)
+
+- 2nd argv ... this is the data that can be passed to the pug file to render data dynamically
+- we have to map the data to key {key: "data to render"}
+ex:
+---
+res.render('shop', {prods: products, docTitle: "My Shop"})
+
+- to render the data using pug ... we use "#{}"
+ex: title #{docTitle}
+
+snippet:
+---
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{docTitle}
+    link(rel="stylesheet", href="/css/main.css")
+    link(rel="stylesheet", href="/css/product.css")
+  body
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a.active(href="/") Shop
+          li.main-header__item
+            a.active(href="/admin/add-product") Add-Product
+    main
+      each product in prods
+        .grid
+          article.card.product-item
+            header.card__header
+              h1.product__title #{product.title}
+            div.card__image
+              img(src="", alt="")
+            div.card__content
+              h2.product__price $19.99
+              p.product__description A very interesting book about so many even more interesting things!
+            div.card__actions
+              button.btn Add to Cart
+
+explanation
+---
+- to iterate on every addition of product from the form data ...
+  - render the content with "each" loop provided with pug
+ex: each products in prods
+
+- we can also use conditional statement ... to render the products
+- if there are no products in the array then there will be no data rendered
+
+snippet
+---
+main
+      if prods.length > 0
+        each product in prods
+          .grid
+            article.card.product-item
+              header.card__header
+                h1.product__title #{product.title}
+              div.card__image
+                img(src="", alt="")
+              div.card__content
+                h2.product__price $19.99
+                p.product__description A very interesting book about so many even more interesting things!
+              div.card__actions
+                button.btn Add to Cart
+      else
+        h1 No Products
+
+Note:
+- convert every HTML page into pug file format
+
