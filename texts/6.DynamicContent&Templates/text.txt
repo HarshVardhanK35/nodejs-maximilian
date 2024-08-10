@@ -227,4 +227,100 @@ main
 
 Note:
 - convert every HTML page into pug file format
+____________________________________________________________________________________________________________________________________________________________________________________________________
+
+Adding a Layout
+---------------
+- if we repeat a basic structure of code in every pug file
+
+in our application...
+- we see that head and headers tags are repeated everywhere inside three files ... 404, add-product, shop files
+
+- we create a new folder ... "layouts"
+  - create a file "main-layout" inside it
+    - copy the code that was repeated in every file
+
+- if there is dynamic data that each file holds was different
+  - we insert 'hooks' with "block" keyword
+
+snippet
+---
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{docTitle}
+    link(rel="stylesheet", href="/css/main.css")
+    block styles
+  body
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a.active(href="/") Shop
+          li.main-header__item
+            a.active(href="/admin/add-product") Add Product
+    block content
+
+- "block styles" & "block content"
+- if another file has more styles in it we can insert styles with this 'block hook'
+
+
+so how to use this layout inside other files?
+---
+- using "extends" keyword and insert the path of the layout file directory
+
+inside add-product.pug:
+---
+extends layouts/main-layout.pug
+
+//- to add more styles ... if any
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/product.css")
+
+//- to add more content ... using hook "block" if any
+block content
+    main
+      form.product-form(action="/admin/add-product", method="post")
+        div.form-control
+          label(for="title") Title
+            input(type="text", name="title")#title
+        button.btn(type="submit") Add Product
+____________________________________________________________________________________________________________________________________________________________________________________________________
+- active links ?
+---
+- we have not add the active class to the links we are in
+- to add them we use ternary operator to check which page we are exactly on
+
+check for "shop" page:
+---
+- add path key inside res.render()...
+
+router.get('/', (req, res, next) => {
+  const products = adminData.products
+  res.render('shop', { prods: products, docTitle: "My Shop", path: '/'})
+})
+
+- check for the path inside main-layout.pug file ...
+  - a(href="/", class=(path === '/' ? active : '')) Shop
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{docTitle}
+    link(rel="stylesheet", href="/css/main.css")
+    block styles
+  body
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a(href="/", class=(path === '/' ? active : '')) Shop
+          li.main-header__item
+            a(href="/admin/add-product") Add Product
+    block content
 
