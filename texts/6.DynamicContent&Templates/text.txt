@@ -323,4 +323,165 @@ html(lang="en")
           li.main-header__item
             a(href="/admin/add-product") Add Product
     block content
+____________________________________________________________________________________________________________________________________________________________________________________________________
+Working with EJS
+----------------
+- EJS has extended functionalities of pug
 
+1. change inside app.set('view engine', 'ejs')
+
+2. uses same HTML template but for dynamic content ... we use <%= "dynamic" %>
+- we use "<%= pageTitle %>" only if we directly output a value
+
+3. for logic blocks we use just "<% %>"
+
+Note
+---
+- to insert an "if else" block we use ...
+
+<% if something > 0 { %>
+  block of code to execute
+<% } else { %>
+  block to execute
+<% } %>
+
+
+reused code rendering - <%- %>
+---
+- there are some blocks that are reused inside 'ejs' templates
+  - as we used layouts with "PUG" which have the code that is reused in different files
+
+- in "ejs" we use split templates
+eg. - if we use head in every file then we create a head component likewise we create different components (nav etc.)
+
+- create a components folder ... create a file for head, nav components
+  - to import these components into the files we use ...
+    - <%- include('path-to-folder/file')%>
+
+Note
+---
+- "<%- include("path-to-folder") %>"
+... we render the HTML code
+- "<%= %>"
+... if we use this ... we render the same HTML code as a text
+
+                                                CREATING THE COMPONENTS
+-----------------------------------------------------------------------
+components/head.ejs
+---
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Page not found</title>
+		<link rel="stylesheet" href="/css/main.css" />
+
+- without closing tag for 'head' ... close the head tag after importing head.ejs component into a file where the component is needed
+
+components/nav.ejs
+---
+<header class="main-header">
+  <nav class="main-header__nav">
+    <ul class="main-header__item-list">
+      <li class="main-header__item">
+        <a class="" href="/">Shop</a>
+      </li>
+      <li class="main-header__item">
+        <a class="" href="/admin/add-product">Add Product</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+components/end.ejs
+---
+</body>
+</html>
+                                                IMPORTING THE COMPONENTS
+------------------------------------------------------------------------
+
+import this into "404.ejs"
+---
+<%- include('components/head.ejs') %>
+</head>
+<!-- the closing tag will be included after importing the component where we use... -->
+
+	<body>
+    <%- include('components/nav.ejs') %>
+	<h1>Page Not Found</h1>
+<%- include('components/end.ejs') %>
+
+import the components into "add-product.ejs"
+---
+<%- include('components/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/product.css">
+	</head>
+	<body>
+    <%- include('components/nav.ejs') %>
+    <main>
+      <form action="/admin/add-product" class="product-form" method="post">
+        <div class="form-control">
+          <label for="title">Title</label>
+          <input type="text" name="title" id="title">
+        </div>
+        <button class="btn" type="submit">Add Product</button>
+      </form>
+    </main>
+<%- include('components/end.ejs') %>
+
+import all components into "shop.ejs"
+---
+<%- include('components/head.ejs') %>
+	</head>
+	<body>
+    <%- include('components/nav.ejs') %>
+		<main>
+			<% if (prods.length > 0) { %>
+        <div class="grid">
+          <% for (let product of prods) { %>
+            <article class="card product-item">
+              <header class="card__header">
+                <h1 class="product__title"><%= product.title %></h1>
+                <div class="card__image">
+                  <img src="" alt="" />
+                </div>
+                <div class="card__content">
+                  <h2 class="product__price">$19.99</h2>
+                  <p class="product__description">
+                    A very interesting book about so many even more interesting
+                    things!
+                  </p>
+                </div>
+                <div class="card__actions">
+                  <button class="btn">Add to Cart</button>
+                </div>
+              </header>
+            </article>
+          <% } %>
+        </div>
+			<% } else { %>
+			  <h1>No Products Found!</h1>
+			<% } %>
+		</main>
+<%- include('components/end.ejs') %>
+
+
+Note
+---
+- to include active classes into the nav
+- remember that we have used 'path' with pug (created inside render)
+
+- include the ternary operator to set class to active based on if condition
+
+updated 'nav.ejs' component with class="active"
+---
+<header class="main-header">
+  <nav class="main-header__nav">
+    <ul class="main-header__item-list">
+      <li class="main-header__item"><a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a></li>
+      <li class="main-header__item"><a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product</a></li>
+    </ul>
+  </nav>
+</header>
