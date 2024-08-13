@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title><%= pageTitle %></title>
+	</head>
+	<body>
+    <header>
+      <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+          <li class="main-header__item"><a class="" href="/">Users</a></li>
+          |
+          <li class="main-header__item"><a class='active' href="/user-form">User Form</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <form action="/user-form" method="post">
+        <label for="username">Enter a user</label>
+        <input type="text" name="username">
+        <button type="submit">Add User</button>
+      </form>
+    </main>
+  </body>
+</html>
