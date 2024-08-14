@@ -1,0 +1,112 @@
+what is MVC?
+------------
+MVC - Models - Views - Controllers
+
+Models:
+---
+- objects that are responsible for representing data in the code
+- saving, fetching data etc is handled by models
+
+Views:
+---
+- what the users sees on front-end
+- rendering the data that is fetched on front-end
+
+Controllers:
+---
+- these are the connection between models and views
+- ROUTES:
+  - which define upon which path for which HTTP method which controller code must execute
+- controller... defines which model to work and which view to render
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Note: we work on the 'main' app
+
+"CONTROLLERS"
+
+Adding Controllers
+------------------
+- inside "main" directory ... we only have separate folders for 'views' but not for 'models' and 'controllers'
+  - the code for models and controllers all was mixed into routes ... so it makes the routes directory large and unreadable
+
+snippet
+---
+
+.. // inside '/add-product' route
+router.get('/add-product',
+
+.. // controller code starts from here
+  (req, res, next) => {
+    res.render('add-product', {pageTitle: "Add Product", path: '/admin/add-product'})
+  }
+)
+
+- so we separate the code that from 'rotes' to 'models' and 'controllers'
+- create a separate directory for 'controllers'
+  - inside "controllers" directory create a 'products.js' file which consists of products related logic
+- if we have 'user' controller logic that goes into 'user' related controller file.
+
+- add all the product related logic inside products.js and export the code from there and import wherever we need it
+
+controllers/products.js
+---
+const products = [];
+
+const getAddProductPage = (req, res, next) => {
+	res.render("add-product", {
+		pageTitle: "Add Product",
+		path: "/admin/add-product",
+	});
+};
+
+const postNewProduct = (req, res, next) => {
+	products.push({ title: req.body.title });
+	res.redirect("/");
+};
+
+const getAllProducts = (req, res, next) => {
+  res.render('shop', { prods: products, pageTitle: "My Shop", path: '/'})
+}
+
+module.exports = {
+	getAddProductPage,
+  postNewProduct,
+  products,
+  getAllProduct
+};
+
+- this will be imported into "routes/admin.js" and "routes/shop.js"
+
+routes/admin.js
+---
+const express = require('express')
+const router = express.Router()
+
+// imported the controllers
+const { getAddProductPage, postNewProduct } = require('../controllers/products')
+
+// ... /admin/add-product => GET req
+router.get('/add-product', getAddProductPage)
+// ... /admin/product => POST req
+router.post('/add-product', postNewProduct)
+
+module.exports = router
+
+
+routes/shop.js
+---
+const path = require('path')
+const express = require('express')
+
+// imported the controller
+const { getAllProducts } = require('../controllers/products')
+
+const router = express.Router()
+router.get('/', getAllProducts)
+module.exports = router
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+"MODELS"
+--------
+
+- in main directory ... create a 'models' folder 
