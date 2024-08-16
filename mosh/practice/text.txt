@@ -1,0 +1,393 @@
+"OOPs in JS"
+------------
+- a program 'paradigm' that centered around objects rather than functions
+
+4 pillars of OOPs
+-----------------
+- encapsulation, polymorphism, abstraction, inheritance
+- in OOPs we combine a group of related variables and functions in a 'unit'
+- that 'unit' is called "object"
+
+inside a unit ...
+ - functions are referred as methods
+ - variables are properties
+- grouping a set of related functions and variables into a unit is known as "ENCAPSULATION"
+
+example of ENCAPSULATION
+---
+- procedural programming ... where set of variables and functions are set separately
+
+---
+const hrSalary = 83.34
+const workHrs = 9
+function getWage(baseSalary, workHrs) {
+ return (baseSalary * workHrs)
+}
+- OOPs ... these are set into a unit (an object)
+
+---
+let employeeDetails = {
+ hrSalary: 83.34,
+ workHrs: 9,
+ getWage: function() {
+ return (this.hrSalary * this.workHrs)
+ }
+}
+employeeSalary.getWage()
+
+Note:
+--
+- functions inside OOPs have no parameters as compared to procedural
+- with OOPs functions has fewer parameters
+
+"best functions are those with no parameters" --- ENCAPSULATION
+
+1. encapsulation: reduce complexity + increase reusability
+2. abstraction: reduce complexity + isolate impact of changes
+3. inheritance: eliminate extra code
+4. polymorphism: refactor ugly switch / case statements
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+creating objects
+----------------
+OBJECT LITERALS
+---
+- creating using object literals
+- object is a collection of key-value pairs
+- creating an object using "Object Literals"
+
+const circle = {
+ radius: 1,
+ draw: function() {
+ console.log('draw')
+ }
+}
+
+// calling a method
+circle.draw()
+
+Note:
+---
+function() {
+ console.log('draw')
+}
+- this is an anonymous function
+
+in an object,
+- the "keys: value" pairs >>> radius: 1 is a property
+- function 'draw' is a method
+- the members are accessed using (.) dot notation
+
+FACTORIES
+---
+- creating objects using 'factories'
+
+why?
+---
+when we used same object at different places with same properties and methods ...
+ - if there is an issue / bug inside the object ... then we have to change in every place where we used the same object
+
+so, object literal syntax is not the best way to create an object
+ - so we use factories to create the objects
+
+if a object has more than one function ... then the object has behavior
+ - creating objects with object literals is an issue when the object has behavior
+
+solution: using factories or constructors to create a function
+
+syntax
+---
+function createCircle(radius) {
+ return {
+ radius: radius,
+ draw: function() {
+  console.log('draw')
+ }
+ }
+}
+      // - call the above function ... to create a circle
+const circle = createCircle(1)
+                            \
+                      passing arguments
+// methods
+circle.draw()
+
+CONSTRUCTORS
+---
+- using constructors to create an object
+- naming convention ... names start with CapitalLetter
+- inside the body we use 'this' keyword instead of 'return' statement
+      "THIS REFERS TO THE OBJECT THAT IS EXECUTING THIS PIECE OF CODE"
+- use dot notation to set properties on that object
+
+this.radius = radius
+  |             |
+ property     value
+     \
+      takes from the argument passed to the function at call
+
+syntax
+---
+function CreateCircle (radius) {
+ this.radius = radius
+ this.draw = function() {
+ console.log('draw')
+ }
+}
+      // to create a circle using constructor functions
+const newCircle = new CreateCircle(1)
+
+BTS of a 'new' keyword
+---
+- 'new' creates an empty object {}
+- by default this refers to the global object (browser: global object is window object || node: global object is global)
+- without 'new' keyword this refers to 'global' object ... with 'new' this refers to the object that 'new' create
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Constructor Property
+--------------------
+- new String() >>> a constructor property
+- but we use { ""; ''; `` } to create strings
+
+- we use const keyValue = {} >>> but internally JS creates a constructor property to create an object
+  -- "new Object()"
+
+- we use boolean, number literals etc,. to create booleans and numbers
+>>> using let bool = true; let x = 1
+  -- we can also create these using constructors >>> using "new Boolean()" and "new Number()"
+
+Note:
+---
+- every object has constructor property >>> this refers to the function that was used to create that object
+
+                                      "everything is an object in JS"
+
+- functions are also treated as an object
+- we have set of methods (apply, call, bind) and properties (arguments, caller, length etc...) on any function
+
+Note
+---
+- we have built in constructor called "function" >>> internally JS uses constructor function to create object
+
+- when we create a function .. internally JS creates with 'Function' constructor as shown below...
+const Circle1 = new Function('radius', `
+  this.radius = radius
+  this.draw = function() {
+    console.log('draw')
+  }
+`)
+// calling
+const circle = new Circle1
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Value vs Reference Types
+------------------------
+1. value types >>> primitives
+2. reference types
+
+value types = number, string, boolean, undefined, null, symbol
+primitives  = objects, arrays, functions
+
+case1: const x = 10
+case2: const x = { value: 10 }
+
+- in case1, x directly stores the value
+- in case2, x stores the address of the object... as the object is stored somewhere in the memory
+
+case3:
+let x = 10
+let y = x
+x = 20
+- we just copies the value of 'x' into 'y'... so even we change the value of x the value of y does not change
+console >>> x = 20 & y = 10
+
+case4:
+let x = { value: 10 }
+let y = x
+// - we get the reference of address stored inside the 'x' and same stores inside 'y'
+
+x.value = 20
+// - so even we change 'value' inside the object with 'x' it also changes with 'y'
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Adding or Removing Properties
+-----------------------------
+- adding properties to an object
+
+- we can use both . and [] (dot and square brackets notation) to add or access the properties
+
+ex:
+function CreateCircle (radius) {
+  this.radius = radius
+  this.draw = function() {
+    console.log('draw')
+  }
+}
+
+const circle = new CreateCircle(1)
+
+// add properties use 'dot' or []-'square bracket' notation
+---
+// . used when there is only single string for key
+circle.createInnerCircle = { radius: 0.1 }
+
+// [] used when there is double or more strings used for key
+circle['new property'] = { location: 'center' }
+
+console.log(circle['new property'])
+
+to remove properties
+---
+// delete circle.<propertyName>
+// delete circle.[propertyName]
+
+
+Iterate Properties
+------------------
+1. we use for...in
+for (let key in object) {
+  console.log(key: circle[key])
+}
+
+2. we use... Object.keys(circle)
+
+3. check for the existence we use... if('draw' in circle)
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Abstraction
+-----------
+- hide the details ... show only the essentials
+
+ex:
+const CreateCircle = function (radius) {
+  this.radius = radius
+
+  this.optimumLocation = function() {
+    //... some logic
+  }
+
+  this.draw = function() {
+    this.optimumLocation()
+    console.log('draw')
+  }
+}
+
+const circle = new CreateCircle()
+
+// here the inside complexity is easily available on outside ... such as optimumLocation() must be hidden
+// only the essentials must be shown outside ... such as radius, draw()
+
+circle.optimumLocation()
+
+// we have to hide the complexity ... the optimumLocation() is used inside the draw() function
+// so no need to be accessed outside
+
+
+Implementing Abstraction
+---
+1. so declare as a private variable instead as a property
+
+function OuterFunc (argv) {
+
+  // a property
+  this.argument = argv
+
+  // a private variable
+  let var1 = "val1"
+
+  // a private function
+  let useFunc () {
+    // ... some logic
+  }
+
+  this.innerFunction = function () {
+
+    // private variables available inside the "innerFunction" scope
+    let x, y
+
+    // parent variables / parent's private variables
+    this.useFunc()
+
+    console.log('draw')
+  }
+}
+
+Note
+---
+- closure
+  -- one function lies inside another function and the variables defined inside parent function are accessible inside inner function (that is: closure scope)
+- scope
+  -- let x, y belongs to innerFunction only so they are restricted to the scope of inner function
+- scope is temporary
+__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Getters & Setters
+-----------------
+
+const CreateCircle = function (radius) {
+  this.radius = radius
+
+  let defaultLocation = { x: 0, y: 0 }
+
+  this.getDefaultLocation = function() {
+    return defaultLocation
+  }
+
+  this.draw = function() {
+    this.optimumLocation()
+    console.log('draw')
+  }
+}
+
+const circle = new CreateCircle()
+
+let loc = circle.getDefaultLocation()
+console.log(loc)
+
+- here I have created getDefaultLocation() as a function which returns defaultLocation (which is a private member of the circle object)
+  -- with this we can call... circle.getDefaultLocation()
+
+- but what if we do not want to call as getDefaultLocation() ...
+  -- we want to call as circle.defaultLocation as a property
+
+const CreateCircle = function (radius) {
+  this.radius = radius
+
+  let defaultLocation = { x: 0, y: 0 }
+
+  Object.defineProperty(this, 'defaultLocation', {
+
+    // to get the values from defaultLocation (private member)
+    get: function () {
+      return defaultLocation
+    },
+
+    // to set the value for the property .. we use setters (1st perform validation)
+    set: function (value) {
+      if (!value.x || !value.y) {
+        throw new Error('Invalid values given for x and y')
+      }
+      defaultLocation = value
+    }
+  })
+
+  this.draw = function() {
+    this.optimumLocation()
+    console.log('draw')
+  }
+}
+
+const circle = new CreateCircle(1)
+
+// get location
+let getLocation = circle.getLocation
+
+// set new location
+let setLocation = circle.defaultLocation = { x: 1, y: 1 }
+console.log(location)
+
+Note
+--
+- here, as the getLocation is a property .. access it with dot notation
+
+
