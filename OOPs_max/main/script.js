@@ -1,7 +1,7 @@
-const arr = [{ name: 'one' }, { name: 'two' }]
+const arr = [5, 10]
 
-const one = arr.findIndex((person) => {
-  return person.name === 'one'
-})
+const mul = arr.reduce((prev, curr) => {
+  return prev * curr
+}, 1)
 
-console.log(one)
+console.log(mul)

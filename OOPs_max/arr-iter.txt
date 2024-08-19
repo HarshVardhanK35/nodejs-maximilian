@@ -108,8 +108,8 @@ Concat() Method
   - this method will create a copy of an existing array and add the elements passed to the copied array
 
 
-indexOf() and lastIndexOf()
----------------------
+indexOf() and lastIndexOf() methods
+-----------------------------------
 - these takes in the element and retrieve the indexes they were in
   - indexOf()... searches from left and lastIndexOf() searches from right
 
@@ -119,8 +119,8 @@ indexOf() and lastIndexOf()
     arr.indexOf({ name: "harsha" })
   >/ returns '-1' as result if indexOf() or lastIndexOf() could not find any element
 
-find() and findIndex()
-----------------------
+find() and findIndex() methods
+------------------------------
 - as indexOf and lastIndexOf does not work for reference data types ... we have find and findIndex methods for searching reference elements
 
   - we have find and findIndex methods which takes another function as an argument ...
@@ -128,7 +128,7 @@ find() and findIndex()
       returns a boolean for the what we are looking inside an array of reference objects
 
   find:
-  -----
+  ---
   const arr = [{ name: 'one' }, { name: 'two' }]
   const two = arr.find((person) => {
     return person.name === 'two'
@@ -144,10 +144,137 @@ find() and findIndex()
     - returns an exact element from the array but not the copy of the element
 
   findIndex:
-  ----------
+  ---
   const one = arr.findIndex((person) => {
     return person.name === 'one'
   })
   console.log(one)
 
   - returns the exact index of the element we are searching for
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+forEach() loop
+--------------
+- alternative to for-of loop to iterate over values in an array
+
+  const prices = [10, 13, 12]
+  const tax = 0.1
+  const pricesWithTaxes = []
+  for (const price of prices) {
+    pricesWithTaxes.push(price * (1 + tax))
+  }
+  console.log(pricesWithTaxes)
+
+  - instead of for-of we can use for-each to iterate over the loop
+    - takes in a callback function and has access to each element and it's index also
+
+    const prices = [10, 13, 12]
+    const tax = 0.1
+    const pricesWithTaxes = []
+    prices.forEach((price, index) => {
+        const obj = { index: index, priceTax: (price * (1 + tax)) }
+        pricesWithTaxes.push(obj)
+      // pricesWithTaxes.push(price * (1 + tax))
+    })
+    console.log(pricesWithTaxes)
+
+    >/ returns:
+    [
+      { index: 0, priceTax: 11 },
+      { index: 1, priceTax: 14.3 },
+      { index: 2, priceTax: 13.200000000000001 }
+    ]
+
+Map Method
+----------
+- works on arrays and returns a new array with new address in the memory and the original array is untouched
+
+  const prices = [10, 13, 12]
+  const tax = 0.1
+  const newArr = prices.map((price, index) => {
+    return obj = { index: index, priceTax: (price * (1 + tax)) }
+  })
+  console.log(newArr)
+
+sort() Method
+-------------
+- using normal sort() method
+  - sorts the array elements on changing the elements into strings so '10' < '3'
+  - so, we can not use normal sort() without if condition
+
+  const arr = [5, 10, 3, 2, 8]
+  const arr1 = arr.sort()
+  console.log(arr1)
+
+  returns: >/ [ 10, 2, 3, 5, 8 ]
+
+- with if condition:
+
+  const arr = [5, 10, 3, 2, 8]
+  const arr1 = arr.sort((a, b) => {
+    if(a > b) {
+      return 1
+    }
+    else if (a === b) {
+      return 0
+    }
+    else{
+      return -1
+    }
+  })
+  console.log(arr1)
+
+  >/ returns: [ 2, 3, 5, 8, 10 ]
+
+filter() method
+---------------
+- filter the array on a condition and returns an array
+
+  const arr = [5, 10, 3, 2, 8]
+  const arr1 = arr.filter((num, index) => {
+    return num <= 5
+  })
+  console.log(arr1)
+
+  - filters the original array on the condition passed
+
+reduce() method
+---------------
+- this method reduces an array into a simpler value ...
+  - reduce() takes in a 'callback' function and an 'initial' value to start the operation with (2 argv)
+
+  const arr = [5, 10]
+
+  const mul = arr.reduce((prev, cur) => {
+    return prev * cur
+  }, 1)
+
+  const sum = arr.reduce((prev, cur) => {
+    return prev + cur
+  }, 0)
+
+  console.log(mul, sum)
+
+  - based on the operation we perform the initial value changes
+
+
+use-cases:
+----------
+1.
+const originalArray = [{price: 10.99}, {price: 5.99}, {price: 29.99}];
+const transformedArray = originalArray.map(obj => obj.price);                         // produces [10.99, 5.99, 29.99]
+const sum = transformedArray.reduce((sumVal, curVal) => sumVal + curVal, 0);          // => 46.97
+
+2.
+const originalArray = [{price: 10.99}, {price: 5.99}, {price: 29.99}];
+const sum = originalArray.reduce((sumVal, curVal) => sumVal + curVal.price, 0);       // => 46.97
+
+3.
+const originalArray = [{price: 10.99}, {price: 5.99}, {price: 29.99}];
+const sum =
+  originalArray
+    .map(obj => obj.price)
+    .reduce((sumVal, curVal) => sumVal + curVal, 0);                                  // => 46.97
+
+- different use-cases with concise code ... where we can join both "map" and "reduce" methods
+
