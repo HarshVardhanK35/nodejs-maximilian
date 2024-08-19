@@ -1,0 +1,153 @@
+More on Arrays & Iterables?
+--------------------------
+
+what are 'Iterables' and 'Array-Like Objects'?
+---
+
+what is an iterable?
+---
+- objects where we can use "for-of" loop
+- not every iterable is an array (maps, sets...)
+
+what is an Array-Like Objects?
+---
+- objects that have a length property and use indexes to access items
+- not every array-like object is an array (strings)
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Creating Arrays
+---------------
+1. const array1 = [1, 2, 3]
+
+2. using 'new' keyword
+  - const arr2 = new Array()                    // [] >>> empty array
+  - const arr2 = new Array('hi', 'world')       // ['hi', 'world']
+  - const arr2 = new Array(1, 5)                // [1, 5]
+
+- it is normal if we pass more than one number inside an array ...
+  - when we pass only a number as an argument
+
+  const arr2 = new Array(5)
+- this creates an empty array with length = 5 (it has 5 empty spaces)
+- if we pass in single number ... it is treated as the length of that array
+
+3. using Array.of()
+  - const arr3 = Array.of(1, 2)
+
+-----------------------------------------------------------------------------------------------
+
+4. using Array.from()
+  - this takes in an 'iterable' or an 'array-like object' which then converts it into an array
+
+ex: Array.from('array')     // ['a', 'r', 'r', 'a', 'y']
+- this converts array-like object or an iterable such as a string to an array
+
+use-case:
+---
+on DOM, if we have list items (li)...
+
+- console.log(document.querySelectorAll('li'))
+/> returns all the list items on DOM in the form of "NODE-LIST"
+note: NODE-LIST is not an array-like object
+
+- we can convert these list items into an array
+  - const arrayListItems = Array.from ( document.querySelectorAll( 'li' ) )
+  - clg(arrayListItems)
+/> returns a real array and we can apply any real array methods on it ... that we can not on node-list
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Splice() Method
+---------------
+1. takes 2 arguments (starting index, number of elements to remove)
+      const arr = [1, 2, 3]
+      arr.splice(0, 1)
+  /> starts from index: 0 and removes one element
+  /> [2, 3]
+
+2. takes 3 argv (starting index, number of elements to remove, element that replaces after removing)
+      const arr = [1, 2, 3, 4]
+      arr.splice(0, 2, 'hi')
+  >/ ['hi', 3, 4]
+
+Note:
+- splice() can take in negative index also
+- but arrays will not support negative index >> returns 'undefined'
+
+
+Slice() Method
+--------------
+
+1. copying elements of an array:
+---
+  - slice() copies an array and stores in memory with a new address
+
+    const arr1 = [1, 2, 3]
+    const arr2 = arr1
+  >/ both arr1 and arr2 contains same elements and when we change the arr1 in turn effects the arr2
+
+    const arr1 = [1, 2, 3]
+    const arr2 = arr1.slice()
+    arr1.push(4)
+  >/ here arr2 gets a copy of arr1 into it ... so whenever we change arr1 it does not effect the arr2
+  >/ arr1: [1,2,3,4] & arr2: [1,2,3]
+
+2. slice() when takes in arguments
+---
+  - it takes 'start' and 'end' as number types (starting and ending index)
+    - selects a range of elements in an array from elements starting to end-1 index
+  - as we can not select range of elements with normal array indexing
+
+    const arr1 = [1, 2, 3, 4, 5]
+    aar1.slice(0, 2)
+  >/ [1, 2]
+
+
+Concat() Method
+---------------
+- takes in an array of elements
+  - this method will create a copy of an existing array and add the elements passed to the copied array
+
+
+indexOf() and lastIndexOf()
+---------------------
+- these takes in the element and retrieve the indexes they were in
+  - indexOf()... searches from left and lastIndexOf() searches from right
+
+  - this only works for primitive values not for reference values inside an array
+
+    const arr = [{ name: "harsha" }]
+    arr.indexOf({ name: "harsha" })
+  >/ returns '-1' as result if indexOf() or lastIndexOf() could not find any element
+
+find() and findIndex()
+----------------------
+- as indexOf and lastIndexOf does not work for reference data types ... we have find and findIndex methods for searching reference elements
+
+  - we have find and findIndex methods which takes another function as an argument ...
+    iterates over the array ...
+      returns a boolean for the what we are looking inside an array of reference objects
+
+  find:
+  -----
+  const arr = [{ name: 'one' }, { name: 'two' }]
+  const two = arr.find((person) => {
+    return person.name === 'two'
+  })
+  console.log(two)
+
+  >/ {return person.name === 'two'} => returns a boolean
+  >/ stores the element that we are looking for inside the variable
+
+  >/ returns: { name: 'two' }
+
+  Note:
+    - returns an exact element from the array but not the copy of the element
+
+  findIndex:
+  ----------
+  const one = arr.findIndex((person) => {
+    return person.name === 'one'
+  })
+  console.log(one)
+
+  - returns the exact index of the element we are searching for
