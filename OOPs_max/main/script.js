@@ -1,7 +1,8 @@
-const arr = [5, 10]
+const per1 = {name: 'har'}
+const per2 = {name: 'var'}
+const personData = new Map([[per1, [{age: 30}]]])
+personData.set(per2, [{ age: 29 }])
 
-const mul = arr.reduce((prev, curr) => {
-  return prev * curr
-}, 1)
-
-console.log(mul)
+for(let entry of personData.entries()) {
+  console.log(entry)
+}

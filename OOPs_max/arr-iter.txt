@@ -277,4 +277,161 @@ const sum =
     .reduce((sumVal, curVal) => sumVal + curVal, 0);                                  // => 46.97
 
 - different use-cases with concise code ... where we can join both "map" and "reduce" methods
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
+The Spread Operator (...)
+-------------------------
+- pulls out all elements of an array and provides a new copy of the same array (we can perform this operation only in an array)
+
+  1.
+  const arr = [10, 2, 3, 7, 9]
+  const copiedArr = [...arr]
+
+  2. copying the references
+  const arr = [{ name: 'har', age: 23 }, { name: 'var', age: 22 }]
+  const copiedArr = [...arr]
+  arr.push({ name: 'par', age: 21 })
+  console.log(arr, copiedArr)
+
+    >/ returns:
+    [
+      { name: 'har', age: 23 },
+      { name: 'var', age: 22 },
+      { name: 'par', age: 21 }
+    ]
+    [ { name: 'har', age: 23 }, { name: 'var', age: 22 } ]
+
+  - in the above example, with Spread Operator we copy the addresses / references of the objects
+
+Array Destructuring
+-------------------
+- old way to destructure an array is to use indexing on an array
+  1.
+  const arr = [1, 2, 3, 4]
+  const ele1 = arr[0]
+
+  - using array destructuring
+  2.
+  const arr = [1, 2, 3, 4]
+  const [ele1, ele2] = arr
+
+  - use-case of rest operator
+    const [ele1, ele2, ...otherElements] = arr
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Iterables Maps & Sets
+---------------------
+
+- Arrays:
+  - stores any kind of data
+  - iterable... different "array" methods available to iterate
+  - order is guaranteed, duplicates allowed, zero based index to access otherElements
+
+- Sets:
+  - stores data of any kind
+  - iterable, different "set" methods available
+  - order is NOT guaranteed, duplicates are NOT allowed, no index base to access it's otherElements
+
+- Maps:
+  - stores key-value data of any kind and length
+    - difference between OBJECTS and MAPS ...
+      - OBJECTS.. allows only strings / numbers as keys but in MAPS.. we can use any kind of data (can be a primitive/ reference type) as a key
+  - iterable, with some 'maps' methods
+  - order is guaranteed, duplicates are not allowed, key-based access
+
+
+Sets
+----
+- sets are created with "new Set()" [Set()> constructor]
+  - if no arguments have been passed.. empty set is created (we can pass an iterable like an array, a new set, a node list etc)
+
+  - it is the data storage that tells whether an element contains or not... but it will not retrieve the element
+  ex:
+  1.
+  const set = new Set([1, 2, 3])
+  console.log(set.has(1))                         // true
+
+  - to retrieve the elements in the set we use "entries" or "values"
+    2.
+    const set = new Set([1, 2, 3])
+    for (entry of set.entries()) {
+      console.log(entry)
+    }
+    >/ return:
+    [ 1, 1 ]
+    [ 2, 2 ]
+    [ 3, 3 ]
+
+    3. or if we want to yield set values once ... we can use values method on set
+    const set = new Set([1, 2, 3])
+    for (entry of set.values()) {
+      console.log(entry)
+    }
+    >/ returns:
+    1
+    2
+    3
+
+Maps
+----
+- maps are useful if we do not want to merge but we want to attach to the existing data
+  - map must be initialized with an array of arrays ... each array inside an array is a key-value pair
+    - where key and it's values can be any types
+
+  ex:
+  const per1 = {name: 'har'}
+  const per2 = {name: 'var'}
+  const data = new Map([[per1, [{age: 30}]]])
+  console.log(data)
+
+  >/ returns:
+  ---
+    Map(1) {{…} => Array(1)}
+    [[Entries]]
+      0: {Object => Array(1)}
+        key: {name: 'har'}
+        value: Array(1)
+          0: {age: 30}
+          length: 1
+    [[Prototype]]: Array(0)
+
+  - here the key can be of any type but the value will not be merged into the key (bit the value will be attached)
+
+  retrieve data from maps
+  ---
+  - use map.get()
+    - get() takes in a key as an argument and here object itself can be the key
+
+  ex:
+  const per1 = {name: 'har'}
+  const per2 = {name: 'var'}
+  const personData = new Map([[per1, [{age: 30}]]])
+  console.log(personData.get(per1))
+
+  >/ returns:
+  [ { age: 30 } ]
+
+  set a value to a map:
+  ---
+  main:
+  const per1 = {name: 'har'}
+  const per2 = {name: 'var'}
+  const personData = new Map([[per1, [{age: 30}]]])
+  personData.set(per2, [{ age: 29 }])
+  console.log(personData)
+
+  >/ returns:
+  Map(2) {
+    { name: 'har' } => [ { age: 30 } ],
+    { name: 'var' } => [ { age: 29 } ]
+  }
+
+  - as the maps are iterable.. we can use "map.entries()" to iterate over the maps
+  main:
+    for(let entry of personData.entries()) {
+      console.log(entry)
+    }
+
+  >/ return:
+    [ { name: 'har' }, [ { age: 30 } ] ]
+    [ { name: 'var' }, [ { age: 29 } ] ]
