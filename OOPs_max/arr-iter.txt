@@ -435,3 +435,72 @@ Maps
   >/ return:
     [ { name: 'har' }, [ { age: 30 } ] ]
     [ { name: 'var' }, [ { age: 29 } ] ]
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+WeakMap & WeakSet
+-----------------
+  - the data that we pass to the Set() will be stored inside the memory even if we did not work with it
+    - but the data passed to WeakMap & WeakSet will be garbage collected (clears from the heap)
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Note
+-
+Difference Between Rest and Spread
+----------------------------------
+Rest Operator (...) (passed as parameters)
+  - Gathers arguments into an array.
+  - It’s used in function parameters to collect all remaining arguments into an array.
+    ex:
+      - rest takes (1, 2, 3) changes into an array [1, 2, 3]
+
+Spread Operator (...) (passed as an arguments)
+  - Spreads elements of an array or object into individual elements or key-value pairs.
+  - It’s often used to pass an array of elements as individual arguments to a function, or to clone or merge objects and arrays.
+
+    ex:
+      - spread takes in an array and spreads it into individual numbers
+
+      const numbers = [3, 1, 4, 1, 5, 9];
+      function addNumbers(a, b, c) {
+        return a + b + c;
+      }
+      // Without spread operator:
+      console.log(addNumbers(numbers[0], numbers[1], numbers[2])); // 8
+      // With spread operator:
+      console.log(addNumbers(...numbers)); // 8
+
+ex:
+                      rest operator
+                        /
+  function findMax(...numArr) {
+    let curNum = numArr[0]
+    for (const num of numArr) {
+      if (num < curNum) {
+        curNum = num
+      }
+    }
+    // console.log(curNum)
+  }
+  findMax(...numbers)
+                  \
+                spread operator
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+use-case of destructuring
+---
+  ex:
+    function findMax(...numArr) {
+    let maxNum = numArr[0]
+    let minNum = numArr[0]
+    for (const num of numArr) {
+      if (num > maxNum) {
+        maxNum = num
+      }
+      if (num < minNum) {
+        minNum = num
+      }
+    }
+    return [maxNum, minNum]                       // return value must be an iterable ... return should not be > return () - return must be of array type > return []
+  }
+  const [max, min] = findMax(...numbers)          // an iterable can only be
+  console.log(max, min)
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
