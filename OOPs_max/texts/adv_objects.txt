@@ -1,0 +1,38 @@
+Advanced Objects
+----------------
+Note
+  - Primitive values are the core building blocks that hold our data,
+  - objects (and arrays) are helpful for organizing and working with that data
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+- in objects.. the variables and functions are treated as properties and methods respectively
+- internally, the keys are converted into strings
+- as keys are converted into strings.. so keys must be of any kind
+- when keys are number type the insertion order will be sorted or else the insertion order will be as it is
+
+dynamic property accessing and setting
+---
+  - we can access properties dynamically using square bracket notation without quotations
+  ex:
+  const keyName = 'key1'
+  console.log(complexPerson[keyName])
+
+    - we access keys within quotes using square bracket notation
+      - but here we are accessing dynamic properties
+
+  - every time we can not hard code the properties.. user can choose the properties dynamically
+    - const userChosenKey = 'levels'
+  - we have to set keys dynamically using square braces [userChosenKey] = 'some-value'
+    - const obj = {
+        [userChosenKey] = '2nd'
+      }
+  - we can access this key using.. square braces
+    - clg(obj[userChosenKey])
+
+  snippet:
+    const userChosenKey = 'levels'
+    const obj = {
+      [userChosenKey]: '2nd'                  // set dynamic key
+    }
+    console.log(obj[userChosenKey])           // access value from dynamic key
+
